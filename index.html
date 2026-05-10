@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Panel Personal</title>
+
+<style>
+:root {
+    --primary: #2d9cdb;
+    --background: #f5f6fa;
+    --text: #2c3e50;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    background: var(--background);
+    color: var(--text);
+}
+
+/* ---------- HEADER ---------- */
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: white;
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,.1);
+    z-index: 10;
+}
+
+/* ---------- CONTENIDO ---------- */
+main {
+    padding: 80px 15px 90px;
+}
+
+section {
+    display: none;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+section.active {
+    display: block;
+}
+
+/* ---------- LOGIN ---------- */
+.login input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 12px;
+    font-size: 16px;
+}
+
+.login button {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    background: var(--primary);
+    color: white;
+    border-radius: 10px;
+    border: none;
+}
+
+/* ---------- ELEMENTOS ---------- */
+button {
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: var(--primary);
+    color: white;
+    font-size: 16px;
+}
+
+textarea, input,select, input[type=file] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+/* ---------- NAV INFERIOR ---------- */
+nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: white;
+    display: flex;
+    justify-content: space-around;
+    border-top: 1px solid #ddd;
+}
+
+nav button {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 12px 0;
+    font-size: 11px;
+}
+
+nav button span {
+    display: block;
+    font-size: 20px;
+}
+.plan-card {
+    margin-top: 15px;
+}
+
+.comida {
+    background: #f5f6fa;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+}
+
+.comida h4 {
+    margin: 0 0 5px 0;
+    font-size: 16px;
+}
+.day-selector {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    margin: 15px 0;
+}
+
+.day {
+    min-width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    background: #ecf0f1;
+    color: #2c3e50;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.day.active {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,.15);
+}
+
+</style>
+</head>
+
+<body>
+
+<header>Mi Panel Personal</header>
+
+<main>
+
+<!-- LOGIN -->
+<section id="login" class="login active">
+    <h2>Acceso</h2>
+    <input id="user" placeholder="Usuario" value="usuario">
+    <input id="pass" type="password" placeholder="Contraseña" value="1234">
+    <button onclick="login()">Entrar</button>
+    <p id="error" style="color:red"></p>
+</section>
+
+<!-- PLAN -->
+<section id="plan">
+    <h3>Planificación semanal</h3>
+
+    <label for="dia">Selecciona el día</label>
+    <div class="day-selector">
+    <button class="day active" onclick="seleccionarDia('lunes', this)">L</button>
+    <button class="day" onclick="seleccionarDia('martes', this)">M</button>
+    <button class="day" onclick="seleccionarDia('miercoles', this)">X</button>
+    <button class="day" onclick="seleccionarDia('jueves', this)">J</button>
+    <button class="day" onclick="seleccionarDia('viernes', this)">V</button>
+    <button class="day" onclick="seleccionarDia('sabado', this)">S</button>
+    <button class="day" onclick="seleccionarDia('domingo', this)">D</button>
+</div>
+
+    <div id="planDia"></div>
+</section>
+
+
+<!-- HISTORIAL -->
+<section id="historial">
+    <h3>📚 Planificaciones anteriores</h3>
+    <p>Consultas de semanas pasadas.</p>
+</section>
+
+<!-- PÍLDORAS -->
+<section id="pildoras">
+    <h3>💡 Píldoras prácticas</h3>
+    <ul>
+        <li>Cómo mejorar el descanso</li>
+        <li>Técnicas anti‑estrés</li>
+        <li>Planificación realista</li>
+    </ul>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto">
+    <h3>✉️ Enviar duda a tu nutri</h3>
+    <textarea placeholder="Escribe tu duda"></textarea>
+    <input type="file" accept="image/*">
+    <button>Enviar</button>
+</section>
+
+<!-- FORMULARIO DIARIO -->
+<section id="diario">
+    <h3>❤️ Cómo ha ido tu día</h3>
+    <p id="horaMsg" style="color:red"></p>
+
+    <div id="formDia">
+        <label>Nivel de estrés</label>
+        <select><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+
+        <label>Horas de sueño</label>
+        <select><option>4 horas o menos</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9 o más</option></select>
+
+		<label>Energia</label>
+        <select><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+		
+		<label>Inflamación</label>
+        <select><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+
+		<label>Número de pasos</label>
+        <input type="text"></input>
+		
+		<label>¿Has realizado deporte hoy?</label>
+        <select><option>Sí</option><option>No</option></select>
+		
+        <label>Observaciones sobre tu dia</label>
+        <textarea></textarea>
+
+        <button>Enviar</button>
+    </div>
+</section>
+
+</main>
+
+<!-- NAV -->
+<nav id="nav" style="display:none">
+    <button onclick="show('plan')"><span>📅</span>Plan</button>
+    <button onclick="show('historial')"><span>📚</span>Historial</button>
+    <button onclick="show('pildoras')"><span>💡</span>Píldoras</button>
+    <button onclick="show('contacto')"><span>✉️</span>Contacto</button>
+    <button onclick="show('diario')"><span>❤️</span>Diario</button>
+</nav>
+
+<script>
+const USER = "usuario";
+const PASS = "1234";
+
+function login() {
+    const loginSection = document.getElementById("login");
+    const navBar = document.getElementById("nav");
+    const userInput = document.getElementById("user");
+    const passInput = document.getElementById("pass");
+    const errorMsg = document.getElementById("error");
+
+    if (userInput.value === USER && passInput.value === PASS) {
+        loginSection.classList.remove("active");
+        navBar.style.display = "flex";
+        show("plan");
+    } else {
+        errorMsg.textContent = "Datos incorrectos";
+    }
+}
+
+function show(id) {
+    document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    if(id==="diario") validarHora();
+}
+
+function validarHora() {
+    const h = new Date().getHours();
+    const ok = h >= 10;
+    formDia.style.display = ok ? "block" : "none";
+    horaMsg.textContent = ok ? "" : "Disponible a partir de las 10:00";
+}
+
+const planSemanal = {
+    lunes: {
+        desayuno: ["2 Cafes con leche almendras"],
+        almuerzo: ["Tortitas de arroz","2 Cuñas queso curado"],
+        comida: ["1 Tarrina de arroz con pollo (170g) en salsa de soja y miel (1 scoop) con migas coliflor"],
+        merienda: ["1 Puré de fruta"],
+        cena: ["170g Patatas congeladas", "2 Huevos"]
+    },
+    martes: {
+        desayuno: ["2 Cafes con leche almendras"],
+        almuerzo: ["2 yogures proteicos (1 vainilla y 1 mousse de choco)"],
+        comida: ["Nachos carbonara: Nachos caseros con carne picada con champiñones, migas de coliflor y nata"],
+        merienda: ["Almendras","Chocolate negro"],
+        cena: ["Bowl: Contramuslos de pollo, queso feta, aguacate y tomates cherrys"]
+    },
+    miercoles: {
+        desayuno: ["2 Cafes con leche almendras"],
+        almuerzo: ["Tortitas de arroz","2 Cuñas queso curado"],
+        comida: ["Salmón con ñoquis y queso havarti"],
+        merienda: ["1 fruta"],
+        cena: ["Patatas con pollo y huevo"]
+    },
+    jueves: {
+        desayuno: ["2 Cafes con leche almendras"],
+        almuerzo: ["2 yogures proteicos (1 vainilla y 1 mousse de choco)"],
+        comida: ["Espirales con tomate y atún gratinados con queso mozzarella"],
+        merienda: ["Almendras","Chocolate negro"],
+        cena: ["Pizza en piadina de 3 quesos y jamón serrano"]
+    },
+    viernes: {
+        desayuno: ["2 Cafes con leche almendras"],
+        almuerzo: ["Tortitas de arroz con pechuga de pavo"],
+        comida: ["Lentejas con verduras"],
+        merienda: ["Bowl de leche con corn flakes"],
+        cena: ["Hamburguesa de ternera en pan de cristal con queso y huevo a la plancha"]
+    },
+    sabado: {
+        desayuno: ["Tostadas de tomate, atún y queso"],
+        almuerzo: [""],
+        comida: ["Paella mixta"],
+        merienda: ["Bowl de leche con corn flakes"],
+        cena: ["Bocadillo tortilla francesa con tomate, lomoy queso"]
+    },
+    domingo: {
+        desayuno: ["Tostadas de tomate, atún y queso"],
+        almuerzo: [""],
+        comida: ["Asado de pollo con patatas"],
+        merienda: ["Almendras con chocolate negro"],
+        cena: ["Kebab casero"]
+    }
+};
+
+function renderLista(items) {
+    return items.map(i => `<div>• ${i}</div>`).join("");
+}
+function mostrarPlanDia(dia = diaActual) {
+    const datos = planSemanal[dia];
+    const contenedor = document.getElementById("planDia");
+
+    contenedor.innerHTML = `
+        <div class="plan-card">
+            <div class="comida">
+                <h4>🍞 Desayuno</h4>
+                ${renderLista(datos.desayuno)}
+            </div>
+
+            <div class="comida">
+                <h4>🥗 Almuerzo</h4>
+                ${renderLista(datos.almuerzo)}
+            </div>
+
+            <div class="comida">
+                <h4>🍝 Comida</h4>
+                ${renderLista(datos.comida)}
+            </div>
+
+            <div class="comida">
+                <h4>🍎 Merienda</h4>
+                ${renderLista(datos.merienda)}
+            </div>
+
+            <div class="comida">
+                <h4>🍽 Cena</h4>
+                ${renderLista(datos.cena)}
+            </div>
+        </div>
+    `;
+}
+
+
+let diaActual = "lunes";
+
+function seleccionarDia(dia, boton) {
+    diaActual = dia;
+
+    document.querySelectorAll(".day").forEach(b => b.classList.remove("active"));
+    boton.classList.add("active");
+
+    mostrarPlanDia(diaActual);
+}
+
+// Mostrar por defecto el lunes
+mostrarPlanDia();
+
+</script>
+
+</body>
+</html>
